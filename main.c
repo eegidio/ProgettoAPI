@@ -4,14 +4,15 @@
 #include <assert.h>
 #include <stdbool.h>
 #include <stdint.h>
-#include  <math.h>
+#include <math.h>
 
-#define inf INT32_MAX //potrebbe richiedere u_int_32
+#define inf UINT32_MAX
 
 //------------------------------  ------------------------------//
 
 typedef struct car{
-    int autonomy;
+    uint32_t autonomy;
+    int count;
     struct car *next;
 }car;
 
@@ -20,8 +21,9 @@ typedef enum rb_color{
 }rb_color;
 
 typedef struct rb_node{
-    int distance;
-    int max_autonomy;
+    uint32_t distance;
+    uint32_t max_autonomy;
+    int n_cars;
     car *parking;
 
     struct rb_node *p;
@@ -36,9 +38,9 @@ typedef struct rb_tree{
 }rb_tree;
 
 typedef struct heap_node{
-    int32_t es_dist;
-    int key;
-    int max_autonomy;
+    uint32_t es_dist;
+    uint32_t key;
+    uint32_t max_autonomy;
     struct heap_node *prev;
 }heap_node;
 
@@ -57,48 +59,48 @@ static const char *pr = "pianifica-percorso";
 //------------------------------ PROTOTIPI ------------------------------//
 
 void parse_input(rb_tree *t, char *input);
-void add_station(rb_tree *t, int distance, int n_cars, int *parking);
-void remove_station(rb_tree *t, int distance);
-void add_car(rb_tree *t,int station, int car);
-void remove_car(rb_tree *t, int station, int car);
-void plan(rb_tree *t, int start, int finish);
-void print_out(heap_node *v, int len, int dest);
-void print_out_rec(heap_node *x);
+void add_station(rb_tree *t, uint32_t distance, int n_cars, uint32_t *parking);
+void remove_station(rb_tree *t, uint32_t distance);
+void add_car(rb_tree *t, uint32_t station, uint32_t car);
+void remove_car(rb_tree *t, uint32_t station, uint32_t car);
+void plan(rb_tree *t, uint32_t start, uint32_t finish);
+void print_route(heap_node *v, int len, uint32_t start, uint32_t finish);
+void print_route_rec(heap_node *curr, heap_node *src, char *out);
 //--- Heap ---
 void h_init(heap *x, int lenght);
 void h_deinit(heap *x);
 int h_parent(int i);
 int h_left(int i);
 int h_right(int i);
-void h_fill(heap *h, rb_tree *t, int start, int finish);
+void h_fill(heap *h, rb_tree *t, uint32_t start, uint32_t finish);
 bool h_isALessThanB(heap *h, int a, int b);
-void h_swap(heap *h, int a, int  b);
+void h_swap(heap *h, int a, int b);
 void h_build_min_heap(heap *h);
 void h_min_heapify(heap *h, int n);
 heap_node h_exctract_min(heap *h);
-void h_decrement_prio(heap *h, int i, int prio);
+void h_decrement_prio(heap *h, int i, uint32_t prio);
 //--- List ---
-car *parking_new_node(int aut);
+car *parking_new_node(uint32_t aut);
 void parking_delete_node(car *del);
 void parking_delete_all(rb_node *s);
 void parking_delete_all_rec(car *c);
-bool parking_insert(rb_node *s, int aut);
-bool parking_delete(rb_node *s, int aut);
+bool parking_insert(rb_node *s, uint32_t aut);
+bool parking_delete(rb_node *s, uint32_t aut);
 //--- RB tree ---
-rb_node *rb_new_node(rb_tree *t, rb_color c, int key);
+rb_node *rb_new_node(rb_tree *t, rb_color c, uint32_t key);
 void rb_delete_node(rb_node *n);
 void rb_init(rb_tree *t);
 void rb_delete_all(rb_tree *t, rb_node *n);
 void rb_deinit(rb_tree *t);
 void rb_left_rotate(rb_tree *t, rb_node *x);
 void rb_right_rotate(rb_tree *t, rb_node *x);
-rb_node *rb_insert(rb_tree *t, int key);
+rb_node *rb_insert(rb_tree *t, uint32_t key);
 rb_node *rb_insert_node(rb_tree *t, rb_node *z);
 void rb_insert_fixup(rb_tree *t, rb_node *z);
 void rb_transplant(rb_tree *t, rb_node *u, rb_node *v);
 rb_node *rb_subtree_min(rb_tree *t, rb_node *x);
-rb_node *rb_find(rb_tree *t, int key);
-bool rb_remove(rb_tree *t, int key);
+rb_node *rb_find(rb_tree *t, uint32_t key);
+bool rb_remove(rb_tree *t, uint32_t key);
 void rb_remove_node(rb_tree *t, rb_node *z);
 void rb_remove_fixup(rb_tree *t, rb_node *x);
 rb_node *rb_successor(rb_tree *t, rb_node *x);
@@ -112,17 +114,14 @@ void h_print_visited(heap_node *v, int len);
 int main()
 {
     rb_tree a;
-    char buffer[500];
+    char buffer[5000];
 
     rb_init(&a);
-    
-    while(fgets(buffer, 500, stdin) != NULL){
+    while(fgets(buffer, 5000, stdin) != NULL){
         parse_input(&a, buffer);
-        //rb_print(&a, a.root);
     }
-    
     rb_deinit(&a);
-    
+
     return 0;
 }
 
@@ -132,14 +131,14 @@ void parse_input(rb_tree *t, char *input)
 {
     //non esegue controlli di correttezza sulla stringa di input
     char *token, delim[2] = " ";
-    int n1;
+    uint32_t n1;
 
     token = strtok(input, delim);
     n1 = atoi(strtok(NULL, delim));
     if(strcmp(token, ns) == 0){
         int n_cars;
         n_cars = atoi(strtok(NULL, delim));
-        int cars[n_cars];
+        uint32_t *cars = calloc(n_cars, sizeof(int));
         for(int i=0; i<n_cars; i++)
             cars[i] = atoi(strtok(NULL, delim));
         add_station(t, n1, n_cars, cars);
@@ -149,13 +148,14 @@ void parse_input(rb_tree *t, char *input)
             fprintf(stderr, "%d, ", cars[i]);
         fprintf(stderr, "\n");
         */
+        free(cars);
     } else if(strcmp(token, ds)==0){
         remove_station(t, n1);
         //fprintf(stderr, "deleting station %d\n", n1);
     }else if(strcmp(token, nc)==0 ||
                 strcmp(token, dc)==0 ||
                 strcmp(token, pr)==0 ){
-        int n2 = atoi(strtok(NULL, delim));
+        uint32_t n2 = atoi(strtok(NULL, delim));
         if(strcmp(token, nc)==0){
             add_car(t, n1, n2);
             //fprintf(stderr, "adding car to %d with autonomy %d\n", n1, n2);
@@ -169,7 +169,7 @@ void parse_input(rb_tree *t, char *input)
     }
 }
 
-void add_station(rb_tree *t, int distance, int n_cars, int *parking)
+void add_station(rb_tree *t, uint32_t distance, int n_cars, uint32_t *parking)
 {
     rb_node *new_station = rb_insert(t, distance);
     
@@ -183,7 +183,7 @@ void add_station(rb_tree *t, int distance, int n_cars, int *parking)
     }
 }
 
-void remove_station(rb_tree *t, int distance)
+void remove_station(rb_tree *t, uint32_t distance)
 {
     if(rb_remove(t, distance))
         printf("demolita\n");
@@ -191,7 +191,7 @@ void remove_station(rb_tree *t, int distance)
         printf("non demolita\n");
 }
 
-void add_car(rb_tree *t,int station, int car)
+void add_car(rb_tree *t, uint32_t station, uint32_t car)
 {      
     rb_node *s = rb_find(t, station);
     if(s && parking_insert(s, car))
@@ -199,7 +199,7 @@ void add_car(rb_tree *t,int station, int car)
     else printf("non aggiunta\n");
 }
 
-void remove_car(rb_tree *t, int station, int car)
+void remove_car(rb_tree *t, uint32_t station, uint32_t car)
 {
     rb_node *s = rb_find(t, station);
     if(s && parking_delete(s, car))
@@ -207,76 +207,94 @@ void remove_car(rb_tree *t, int station, int car)
     else printf("non rottamata\n");
 }
 
-void plan(rb_tree *t, int start, int finish)
+void plan(rb_tree *t, uint32_t start, uint32_t finish)
 {
     heap h;
     bool LtoR;
-    if(start < finish)
+    uint32_t heap_dim;
+    if(start < finish){
         LtoR = true;
-    else LtoR = false;
+        heap_dim = finish - start;
+    }else{
+        LtoR = false;
+        heap_dim = start - finish;
+    } 
+    assert(heap_dim > 0);
 
-    h_init(&h, fabs(start - finish));
+    h_init(&h, (int)heap_dim);
     h_fill(&h, t, start, finish);
     h_build_min_heap(&h);
     
-    int j=0, ndis, reach;
+    int j=0;
+    uint32_t ndis, reach;
     heap_node *u, *v, *visited;
     visited = calloc(h.heap_size, sizeof(heap_node));
-
+    //rb_print(t, t->root);
+    //h_print(&h);
     while(h.heap_size > 0){
         visited[j] = h_exctract_min(&h);
         u = visited + j;
         j++;
         if(LtoR)
             reach = u->key + u->max_autonomy;
-        else 
-            reach = fabs(u->key - u->max_autonomy);
+        else{
+            reach = u->key - u->max_autonomy;
+            if(reach < 0)
+                reach = 0;
+        }
         for(int i = 0 ; i < h.heap_size ; i++){
             if( (LtoR && h.min_h[i].key <= reach) ||
                 (!LtoR && h.min_h[i].key >= reach)){
                 v = h.min_h + i;
-                ndis = u->es_dist +1;
+                if(u->es_dist != inf)
+                    ndis = u->es_dist +1;
+                else ndis = inf;
                 if(v->es_dist > ndis){
                     v->prev = u;
                     h_decrement_prio(&h, i, ndis);
                 }
             }
         }
-    }    
-    print_out(visited, j, finish);
+        
+    }   
+    h_print_visited(visited, j);
+    print_route(visited, j, start, finish);
 
     free(visited);
     h_deinit(&h);
 }
 
-void print_out(heap_node *v, int len, int dest)
+void print_route(heap_node *v, int len, uint32_t start, uint32_t finish)
 {
-    heap_node *curr = v;
-
-    int i = 1;
-    while(curr->key != dest && i<len){
-        if(v[i].key == dest)
-            curr = v + i;
-        i++;
-    }
-    if(curr->key == v[0].key){
-        printf("nessun percorso\n");
-        return;
-    }
-    print_out_rec(curr);
-    printf("\n");
+    heap_node *src = v;
+    heap_node *dest = v + (len-1);
+    char output[len*4+1];
+    output[0]=0;
+    
+    for(int i = len-1; i>=0 && dest->key != finish; i--)
+        dest = v + i;
+    
+    print_route_rec(dest, src, output);
+    if(output[0] != 0){
+        output[strlen(output)-1]=0;
+        puts(output);
+    }else puts("nessun percorso");
 }
 
-void print_out_rec(heap_node *x)
+void print_route_rec(heap_node *curr, heap_node *src, char *out)
 {
-    if(x == NULL){
-        return;
-    }else{
-        print_out_rec(x->prev);
-        printf("%d ", x->key);
-    } 
-}
+    char b[10];
+    sprintf(b, "%d ", curr->key);
 
+    if(curr->prev == NULL){
+        if(curr == src)
+            strcat(out, b);
+        else out[0]=0;
+        return;
+    }
+    print_route_rec(curr->prev, src, out);
+    strcat(out, b);
+}
 
 //___________________________________________________
 void h_init(heap *x, int lenght)
@@ -306,12 +324,12 @@ int h_right(int i)
     return (2*i)+2;
 }
 
-void h_fill(heap *h, rb_tree *t, int start, int finish)
+void h_fill(heap *h, rb_tree *t, uint32_t start, uint32_t finish)
 {
-    int min_val, max_val;
+    uint32_t min_val, max_val;
     if(start < finish){
         min_val = start;
-        max_val = finish;        
+        max_val = finish;
     }else{
         min_val = finish;
         max_val = start;
@@ -330,15 +348,13 @@ void h_fill(heap *h, rb_tree *t, int start, int finish)
         s = rb_successor(t, s);
         h->heap_size++;
     }    
-
-    
 }
 
 bool h_isALessThanB(heap *h, int a, int b)
 {
     assert(a != b);
     if(h->min_h[a].es_dist < h->min_h[b].es_dist)
-        return  true;
+        return true;
     else if(h->min_h[a].es_dist > h->min_h[b].es_dist)
         return false;
     else{
@@ -348,7 +364,7 @@ bool h_isALessThanB(heap *h, int a, int b)
     }
 }
 
-void h_swap(heap *h, int a, int  b)
+void h_swap(heap *h, int a, int b)
 {
     heap_node tmp = h->min_h[a];
     h->min_h[a] = h->min_h[b];
@@ -380,7 +396,7 @@ void h_min_heapify(heap *h, int n)
 heap_node h_exctract_min(heap *h)
 {
     if(h->heap_size == 0)
-        return (heap_node){-1,-1,-1,NULL};
+        return (heap_node){0,inf,0,NULL};
 
     heap_node min = h->min_h[0];
     h_swap(h, 0, h->heap_size-1);
@@ -389,7 +405,7 @@ heap_node h_exctract_min(heap *h)
     return min;
 }
 
-void h_decrement_prio(heap *h, int i, int prio)
+void h_decrement_prio(heap *h, int i, uint32_t prio)
 {
     if(prio > h->min_h[i].es_dist){
         fprintf(stderr, "Error : h_decrement_prio, new key not valid");
@@ -404,16 +420,31 @@ void h_decrement_prio(heap *h, int i, int prio)
 
 void h_print(heap *h)
 {
-    fprintf(stderr, "lenght: %d size: %3d\n", h->heap_lenght, h->heap_size);
+    fprintf(stderr, "lenght: %u size: %3u\n", h->heap_lenght, h->heap_size);
     for(int i=0; i<h->heap_size; i++)
-        fprintf(stderr, "%10d | %3d | %3d\n", h->min_h[i].es_dist, h->min_h[i].key, h->min_h[i].max_autonomy);
+        fprintf(stderr, "%10u | %3u | %3u\n", h->min_h[i].es_dist, h->min_h[i].key, h->min_h[i].max_autonomy);
+}
+
+void h_print_visited(heap_node *v, int len)
+{
+    fprintf(stderr, " key | pre | dist\n-----|-----|-----\n");
+    fprintf(stderr, "%4u | SRC | %u\n", v[0].key, v[0].es_dist);
+    for(int i=1; i<len; i++){
+        fprintf(stderr, "%4u |", v[i].key);
+        if(v[i].prev == NULL)
+            fprintf(stderr, " NULL|");
+        else fprintf(stderr, "%4u |", v[i].prev->key);
+        fprintf(stderr, " %u\n", v[i].es_dist);
+    }
+        
 }
 
 //___________________________________________________
-car *parking_new_node(int aut)
+car *parking_new_node(uint32_t aut)
 {
     car *new_car = calloc(1, sizeof(car));
     new_car->autonomy = aut;
+    new_car->count = 1;
     new_car->next = NULL;
     return new_car;
 }
@@ -438,21 +469,28 @@ void parking_delete_all_rec(car *c)
     }
 }
 
-bool parking_insert(rb_node *s, int aut)
+bool parking_insert(rb_node *s, uint32_t aut)
 {
+    if(s->n_cars == 512)
+        return false;
+    else
+        s->n_cars++;
+
     car *new = parking_new_node(aut);
     car *curr = s->parking;
-    
+
     if(curr == NULL || curr->autonomy < aut){
         s->max_autonomy = aut;
         s->parking = new;
         new->next = curr;
+        return true;
     }else{
         car *prev = curr;
         while(curr != NULL && curr->autonomy >= aut){
             if(curr->autonomy == aut){
-                parking_delete_node(new);   
-                return 0;
+                curr->count++;
+                parking_delete_node(new);
+                return true; 
             }
             prev = curr;
             curr = curr->next;
@@ -463,19 +501,13 @@ bool parking_insert(rb_node *s, int aut)
     return true;
 }
 
-bool parking_delete(rb_node *s, int aut)
+bool parking_delete(rb_node *s, uint32_t aut)
 {
     car *curr = s->parking;
 
-    if(curr == NULL)
+    if(curr == NULL || s->n_cars == 0)
         return false;
-    else if(curr->autonomy == aut){
-        if(curr->next == NULL)
-            s->max_autonomy = 0;
-        else 
-            s->max_autonomy = curr->next->autonomy;
-        s->parking = curr->next;
-    }else{
+    else{
         car *prev = curr;
         while(curr != NULL && curr->autonomy != aut){
             prev = curr;
@@ -483,20 +515,31 @@ bool parking_delete(rb_node *s, int aut)
         }
         if(curr == NULL)
             return false;
-        else
-            prev->next = curr->next;
+        else{
+            s->n_cars--;
+            curr->count--;
+            if(curr->count == 0){
+                if(curr == s->parking){
+                    s->parking = curr->next;
+                    if(curr->next == NULL)
+                        s->max_autonomy = 0;
+                    else s->max_autonomy = curr->next->autonomy;
+                }else
+                    prev->next = curr->next;
+                parking_delete_node(curr);
+            }
+        }
+        return true;
     }
-    free(curr);
-    return true;
-
 }
 
 //___________________________________________________
-rb_node *rb_new_node(rb_tree *t, rb_color c, int key)
+rb_node *rb_new_node(rb_tree *t, rb_color c, uint32_t key)
 {
     rb_node *new = calloc(1, sizeof(rb_node));
     new->distance = key;
     new->max_autonomy = 0;
+    new->n_cars = 0;
     new->parking = NULL;
     new->p = t->nil;
     new->left = t->nil;
@@ -571,7 +614,7 @@ void rb_right_rotate(rb_tree *t, rb_node *x)
     x->p = y;
 }
 
-rb_node *rb_insert(rb_tree *t, int key)
+rb_node *rb_insert(rb_tree *t, uint32_t key)
 {
     rb_node *new = rb_new_node(t, RB_RED, key);
     rb_node *inserted = rb_insert_node(t, new);
@@ -622,7 +665,7 @@ void rb_insert_fixup(rb_tree *t, rb_node *z)
             rb_node *y = z->p->p->right;
             if(y->c == RB_RED){
                 z->p->c = RB_BLACK;
-                y->c  =  RB_BLACK;
+                y->c = RB_BLACK;
                 z->p->p->c = RB_RED;
                 z = z->p->p;
             }else {
@@ -631,14 +674,14 @@ void rb_insert_fixup(rb_tree *t, rb_node *z)
                     rb_left_rotate(t, z);
                 }
                 z->p->c = RB_BLACK;
-                z->p->p->c =  RB_RED;
+                z->p->p->c = RB_RED;
                 rb_right_rotate(t, z->p->p);
             }
         }else{
             rb_node *y = z->p->p->left;
             if(y->c == RB_RED){
                 z->p->c = RB_BLACK;
-                y->c  =  RB_BLACK;
+                y->c = RB_BLACK;
                 z->p->p->c = RB_RED;
                 z = z->p->p;
             }else {
@@ -647,7 +690,7 @@ void rb_insert_fixup(rb_tree *t, rb_node *z)
                     rb_right_rotate(t, z);
                 }
                 z->p->c = RB_BLACK;
-                z->p->p->c =  RB_RED;
+                z->p->p->c = RB_RED;
                 rb_left_rotate(t, z->p->p);
             }
         }
@@ -672,7 +715,7 @@ rb_node *rb_subtree_min(rb_tree *t, rb_node *x)
     return x;
 }
 
-rb_node *rb_find(rb_tree *t, int key)
+rb_node *rb_find(rb_tree *t, uint32_t key)
 {
     rb_node *x = t->root;
     while(x != t->nil){
@@ -686,7 +729,7 @@ rb_node *rb_find(rb_tree *t, int key)
     return NULL;
 }
 
-bool rb_remove(rb_tree *t, int key)
+bool rb_remove(rb_tree *t, uint32_t key)
 {
     rb_node *x = rb_find(t, key);
     if(x){
@@ -790,7 +833,7 @@ rb_node *rb_successor(rb_tree *t, rb_node *x)
     if(x->right != t->nil)
         return rb_subtree_min(t, x->right);
     rb_node *y = x->p;
-    while(y !=  t->nil && x == y->right){
+    while(y != t->nil && x == y->right){
         x = y;
         y = y->p;
     }
@@ -803,10 +846,10 @@ void rb_print(rb_tree *t, rb_node *n)
         return;
     else{
         rb_print(t, n->left);
-        fprintf(stderr, "%3d [%3d] | ", n->distance, n->max_autonomy);
+        fprintf(stderr, "%3u [%3u] | ", n->distance, n->max_autonomy);
         car *c = n->parking;
         while(c != NULL){
-            fprintf(stderr, "%3d ", c->autonomy);
+            fprintf(stderr, "%3u ", c->autonomy);
             c = c->next;
         }
         fprintf(stderr, "\n");
@@ -814,9 +857,3 @@ void rb_print(rb_tree *t, rb_node *n)
     }
 }
 
-void h_print_visited(heap_node *v, int len)
-{
-    fprintf(stderr, "%4d |        SRC\n", v[0].key);
-    for(int  i=1; i<len; i++)
-        fprintf(stderr, "%4d | %4d | %4d\n",  v[i].key,  v[i].prev->key, v[i].es_dist);
-}
