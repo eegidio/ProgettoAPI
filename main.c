@@ -5,9 +5,9 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <inttypes.h>
-#include <math.h>
+
 #define BUFFER_SIZE 7000
-#define HEAP_MAX_LEN 25000
+#define HEAP_MAX_LEN 100000
 #define INF UINT32_MAX
 
 //------------------------------  ------------------------------//
@@ -62,13 +62,13 @@ static const char *pr = "pianifica-percorso";
 
 void parse_input(rb_tree *t, char *input);
 int my_strtok(char *input, char *token, int in_len, int start_point);
-
 uint32_t my_atoi(char *s, int s_len);
 void add_station(rb_tree *t, uint32_t distance, int n_cars, uint32_t *parking);
 void remove_station(rb_tree *t, uint32_t distance);
 void add_car(rb_tree *t, uint32_t station, uint32_t car);
 void remove_car(rb_tree *t, uint32_t station, uint32_t car);
 void plan(rb_tree *t, uint32_t start, uint32_t finish);
+int dijkstra(heap *h, heap_node *visited, bool LtoR);
 void print_route(heap_node *v, int len, uint32_t start, uint32_t finish);
 void print_route_rec(heap_node *curr, heap_node *src, char *out);
 //--- Heap ---
@@ -270,10 +270,11 @@ void plan(rb_tree *t, uint32_t start, uint32_t finish)
     }else{
         LtoR = false;
         heap_max_dim = start - finish;
-    } 
+    }
+    assert(heap_max_dim > 0);
 
     if(heap_max_dim < HEAP_MAX_LEN)
-        heap_dim = (int)heap_max_dim;
+        heap_dim = (int)(heap_max_dim+1);
     else heap_dim = HEAP_MAX_LEN;
     assert(heap_dim > 0);
 
@@ -281,14 +282,28 @@ void plan(rb_tree *t, uint32_t start, uint32_t finish)
     h_fill(&h, t, start, finish);
     h_build_min_heap(&h);
     
-    int j=0;
-    uint32_t ndis, reach;
-    heap_node *u, *v, *visited;
+    heap_node *visited;
     visited = calloc(h.heap_size, sizeof(heap_node));
     //rb_print(t, t->root);
     //h_print(&h);
-    while(h.heap_size > 0){
-        visited[j] = h_exctract_min(&h);
+    
+    int j = dijkstra(&h, visited, LtoR);
+
+    //h_print_visited(visited, j);
+    print_route(visited, j, start, finish);
+
+    free(visited);
+    h_deinit(&h);
+}
+
+int dijkstra(heap *h, heap_node *visited, bool LtoR)
+{
+    uint32_t ndis, reach;
+    heap_node *u, *v;
+    int j=0;
+
+    while(h->heap_size > 0){
+        visited[j] = h_exctract_min(h);
         u = visited + j;
         j++;
         if(LtoR)
@@ -299,25 +314,21 @@ void plan(rb_tree *t, uint32_t start, uint32_t finish)
             else    
                 reach = u->key - u->max_autonomy;
         }
-        for(int i = 0 ; i < h.heap_size ; i++){
-            if( (LtoR && h.min_h[i].key <= reach) ||
-                (!LtoR && h.min_h[i].key >= reach)){
-                v = h.min_h + i;
+        for(int i = 0 ; i < h->heap_size ; i++){
+            if( (LtoR && h->min_h[i].key <= reach) ||
+                (!LtoR && h->min_h[i].key >= reach)){
+                v = h->min_h + i;
                 if(u->es_dist != INF)
                     ndis = u->es_dist +1;
                 else ndis = INF;
                 if(v->es_dist > ndis){
                     v->prev = u;
-                    h_decrement_prio(&h, i, ndis);
+                    h_decrement_prio(h, i, ndis);
                 }
             }
         }
-    }   
-    //h_print_visited(visited, j);
-    print_route(visited, j, start, finish);
-
-    free(visited);
-    h_deinit(&h);
+    }
+    return j;
 }
 
 void print_route(heap_node *v, int len, uint32_t start, uint32_t finish)
@@ -390,20 +401,24 @@ void h_fill(heap *h, rb_tree *t, uint32_t start, uint32_t finish)
         min_val = finish;
         max_val = start;
     }
-
+    
     rb_node *s = rb_find(t, min_val);
-    while(s != t->nil && s->distance <=max_val){
-        h->min_h[h->heap_size].key = s->distance;
-        h->min_h[h->heap_size].max_autonomy = s->max_autonomy;
-        h->min_h[h->heap_size].prev = NULL;
+    int i = 0;
+    while(s != t->nil && s->distance <= max_val){
+        h->min_h[i].key = s->distance;
+        h->min_h[i].max_autonomy = s->max_autonomy;
+        h->min_h[i].prev = NULL;
         if(s->distance == start)
-            h->min_h[h->heap_size].es_dist = 0;
+            h->min_h[i].es_dist = 0;
         else
-            h->min_h[h->heap_size].es_dist = INF;
+            h->min_h[i].es_dist = INF;
         
         s = rb_successor(t, s);
-        h->heap_size++;
-    }    
+        i++;
+        if(i > h->heap_lenght)
+            fprintf(stderr, "ERROR h_fill: heap too small\n");
+    }
+    h->heap_size = i;
 }
 
 bool h_isALessThanB(heap *h, int a, int b)
