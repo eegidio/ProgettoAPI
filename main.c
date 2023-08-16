@@ -60,15 +60,15 @@ static const char *pr = "pianifica-percorso";
 
 //------------------------------ PROTOTIPI ------------------------------//
 
-void parse_input(rb_tree *t, char *input);
+void parse_input(rb_tree *t, heap *h, char *input);
 int my_strtok(char *input, char *token, int in_len, int start_point);
 uint32_t my_atoi(char *s, int s_len);
 void add_station(rb_tree *t, uint32_t distance, int n_cars, uint32_t *parking);
 void remove_station(rb_tree *t, uint32_t distance);
 void add_car(rb_tree *t, uint32_t station, uint32_t car);
 void remove_car(rb_tree *t, uint32_t station, uint32_t car);
-void plan(rb_tree *t, uint32_t start, uint32_t finish);
-int dijkstra(heap *h, heap_node *visited, bool LtoR);
+void plan(rb_tree *t, heap *h, uint32_t start, uint32_t finish);
+int dijkstra(heap *h, heap_node *visited, bool LtoR, uint32_t dest);
 void print_route(heap_node *v, int len, uint32_t start, uint32_t finish);
 void print_route_rec(heap_node *curr, heap_node *src, char *out);
 //--- Heap ---
@@ -119,12 +119,17 @@ void h_print_visited(heap_node *v, int len);
 int main()
 {
     rb_tree a;
+    heap b;
     char buffer[BUFFER_SIZE];
 
     rb_init(&a);
+    h_init(&b, HEAP_MAX_LEN);
+
     while(fgets(buffer, BUFFER_SIZE, stdin) != NULL){
-        parse_input(&a, buffer);
+        parse_input(&a, &b, buffer);
     }
+
+    h_deinit(&b);
     rb_deinit(&a);
 
     return 0;
@@ -132,7 +137,7 @@ int main()
 
 //------------------------------ DICHIARAZIONI ------------------------------//
 
-void parse_input(rb_tree *t, char *input)
+void parse_input(rb_tree *t, heap *h, char *input)
 {
     char token[30];
     int in_len = strlen(input), in_read = 0;
@@ -186,7 +191,7 @@ void parse_input(rb_tree *t, char *input)
         in_read = my_strtok(input, token, in_len, in_read);
         n2 = my_atoi(token, strlen(token));
         //fprintf(stderr, "planning route from %d to %d\n", n1, n2);
-        plan(t, n1, n2);
+        plan(t, h, n1, n2);
     }
 }
 
@@ -225,84 +230,67 @@ void add_station(rb_tree *t, uint32_t distance, int n_cars, uint32_t *parking)
     rb_node *new_station = rb_insert(t, distance);
     
     if(new_station == NULL){
-        printf("non aggiunta\n");
+        puts("non aggiunta");
         return;
     }else{
         for(int i=0; i<n_cars; i++)
             parking_insert(new_station, parking[i]);
-        printf("aggiunta\n");
+        puts("aggiunta");
     }
 }
 
 void remove_station(rb_tree *t, uint32_t distance)
 {
     if(rb_remove(t, distance))
-        printf("demolita\n");
+        puts("demolita");
     else
-        printf("non demolita\n");
+        puts("non demolita");
 }
 
 void add_car(rb_tree *t, uint32_t station, uint32_t car)
 {      
     rb_node *s = rb_find(t, station);
     if(s && parking_insert(s, car))
-        printf("aggiunta\n");
-    else printf("non aggiunta\n");
+        puts("aggiunta");
+    else puts("non aggiunta");
 }
 
 void remove_car(rb_tree *t, uint32_t station, uint32_t car)
 {
     rb_node *s = rb_find(t, station);
     if(s && parking_delete(s, car))
-        printf("rottamata\n");
-    else printf("non rottamata\n");
+        puts("rottamata");
+    else puts("non rottamata");
 }
 
-void plan(rb_tree *t, uint32_t start, uint32_t finish)
+void plan(rb_tree *t, heap *h, uint32_t start, uint32_t finish)
 {
-    heap h;
-    bool LtoR;
-    uint32_t heap_max_dim;
-    int heap_dim;
-    if(start < finish){
-        LtoR = true;
-        heap_max_dim = finish - start;
-    }else{
-        LtoR = false;
-        heap_max_dim = start - finish;
-    }
-    assert(heap_max_dim > 0);
+    bool LtoR = (start < finish) ? true : false;
 
-    if(heap_max_dim < HEAP_MAX_LEN)
-        heap_dim = (int)(heap_max_dim+1);
-    else heap_dim = HEAP_MAX_LEN;
-    assert(heap_dim > 0);
-
-    h_init(&h, heap_dim);
-    h_fill(&h, t, start, finish);
-    h_build_min_heap(&h);
+    h_fill(h, t, start, finish);
+    h_build_min_heap(h);
     
     heap_node *visited;
-    visited = calloc(h.heap_size, sizeof(heap_node));
+    visited = calloc(h->heap_size, sizeof(heap_node));
     //rb_print(t, t->root);
     //h_print(&h);
     
-    int j = dijkstra(&h, visited, LtoR);
+    int j = dijkstra(h, visited, LtoR, finish);
 
     //h_print_visited(visited, j);
     print_route(visited, j, start, finish);
 
     free(visited);
-    h_deinit(&h);
 }
 
-int dijkstra(heap *h, heap_node *visited, bool LtoR)
+int dijkstra(heap *h, heap_node *visited, bool LtoR,  uint32_t dest)
 {
     uint32_t ndis, reach;
     heap_node *u, *v;
     int j=0;
+    bool done = false;
 
-    while(h->heap_size > 0){
+    while(h->heap_size > 0 && !done){
         visited[j] = h_exctract_min(h);
         u = visited + j;
         j++;
@@ -327,6 +315,8 @@ int dijkstra(heap *h, heap_node *visited, bool LtoR)
                 }
             }
         }
+        if(u->key == dest)
+            done = true;
     }
     return j;
 }
