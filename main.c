@@ -1,14 +1,17 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <assert.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <inttypes.h>
 
+#define PRINT_LOG false
 #define BUFFER_SIZE 7000
 #define HEAP_MAX_LEN 100000
 #define INF UINT32_MAX
+
+#define chr_cmp(c) ((c != 32 && c != 0) ? true : false)
+#define is_adjacent(LtoR, key, reach)  ((LtoR && key <= reach) || (!LtoR && key >= reach))
 
 //------------------------------  ------------------------------//
 
@@ -59,15 +62,15 @@ static const char *dc = "rottama-auto";
 static const char *pr = "pianifica-percorso";
 
 //------------------------------ PROTOTIPI ------------------------------//
-
-void parse_input(rb_tree *t, heap *h, char *input);
-int my_strtok(char *input, char *token, int in_len, int start_point);
-uint32_t my_atoi(char *s, int s_len);
 void add_station(rb_tree *t, uint32_t distance, int n_cars, uint32_t *parking);
 void remove_station(rb_tree *t, uint32_t distance);
 void add_car(rb_tree *t, uint32_t station, uint32_t car);
 void remove_car(rb_tree *t, uint32_t station, uint32_t car);
 void plan(rb_tree *t, heap *h, uint32_t start, uint32_t finish);
+//----------
+void parse_input(rb_tree *t, heap *h, char *input);
+int my_strtok(char *input, char *token, int in_len, int start_point);
+uint32_t my_atoi(char *s, int s_len);
 int dijkstra(heap *h, heap_node *visited, bool LtoR, uint32_t dest);
 void print_route(heap_node *v, int len, uint32_t start, uint32_t finish);
 void print_route_rec(heap_node *curr, heap_node *src, char *out);
@@ -109,7 +112,7 @@ bool rb_remove(rb_tree *t, uint32_t key);
 void rb_remove_node(rb_tree *t, rb_node *z);
 void rb_remove_fixup(rb_tree *t, rb_node *x);
 rb_node *rb_successor(rb_tree *t, rb_node *x);
-//testing
+//--- Prints ---
 void rb_print(rb_tree *t, rb_node *n);
 void h_print(heap *h);
 void h_print_visited(heap_node *v, int len);
@@ -136,95 +139,6 @@ int main()
 }
 
 //------------------------------ DICHIARAZIONI ------------------------------//
-
-void parse_input(rb_tree *t, heap *h, char *input)
-{
-    char token[30];
-    int in_len = strlen(input), in_read = 0;
-    uint32_t n1, n2, *cars;
-     
-    if(input[in_len - 1] == '\n'){
-        input[in_len -1] = '\0';
-        in_len--;
-    }
-    in_read = my_strtok(input, token, in_len, in_read);
-    if(strcmp(token, ns) == 0){
-        in_read = my_strtok(input, token, in_len, in_read);
-        n1 = my_atoi(token, strlen(token));
-        in_read = my_strtok(input, token, in_len, in_read);
-        n2 = my_atoi(token, strlen(token));
-        cars = calloc(n2, sizeof(uint32_t));
-        for(int i = 0; i< n2; i++){
-            in_read = my_strtok(input, token, in_len, in_read);
-            cars[i] = my_atoi(token, strlen(token));
-        }
-        /*
-        fprintf(stderr, "adding station %d with %d cars : ", n1, n2);
-        for(int i=0; i<n2; i++)
-            fprintf(stderr, "%d, ", cars[i]);
-        fprintf(stderr, "\n");
-        */
-        add_station(t, n1, n2, cars);
-        free(cars);
-    }else if(strcmp(token, ds) == 0){
-        in_read = my_strtok(input, token, in_len, in_read);
-        n1 = my_atoi(token, strlen(token));
-        //fprintf(stderr, "deleting station %d\n", n1);
-        remove_station(t, n1);
-    }else if(strcmp(token, nc) == 0){
-        in_read = my_strtok(input, token, in_len, in_read);
-        n1 = my_atoi(token, strlen(token));
-        in_read = my_strtok(input, token, in_len, in_read);
-        n2 = my_atoi(token, strlen(token));
-        //fprintf(stderr, "adding car to %d with autonomy %d\n", n1, n2);
-        add_car(t, n1, n2);
-    }else if(strcmp(token, dc) == 0){
-        in_read = my_strtok(input, token, in_len, in_read);
-        n1 = my_atoi(token, strlen(token));
-        in_read = my_strtok(input, token, in_len, in_read);
-        n2 = my_atoi(token, strlen(token));
-        //fprintf(stderr, "deleting car to %d with autonomy %d\n", n1, n2);
-        remove_car(t, n1, n2);
-    }else if(strcmp(token, pr) == 0){
-        in_read = my_strtok(input, token, in_len, in_read);
-        n1 = my_atoi(token, strlen(token));
-        in_read = my_strtok(input, token, in_len, in_read);
-        n2 = my_atoi(token, strlen(token));
-        //fprintf(stderr, "planning route from %d to %d\n", n1, n2);
-        plan(t, h, n1, n2);
-    }
-}
-
-int my_strtok(char *input, char *token, int in_len, int start_point)
-{
-    if(start_point >= in_len){
-        fprintf(stderr, "ERROR my_strtok : noting to read\n");
-        return -1;
-    }
-    char c = input[start_point];
-    int tok_i = 0, read_chr = start_point;
-    do{
-        c = input[read_chr];
-        if(c != ' ' && c != '\0'){
-            token[tok_i] = c;
-            tok_i++;
-        }
-        read_chr++;
-    }while(c != ' ' && c != '\0');
-    token[tok_i] = '\0';
-    return read_chr;
-}
-
-uint32_t my_atoi(char *s, int s_len)
-{
-    uint32_t res = 0, pos=1;
-    for(int i=s_len-1; i>=0; i--){
-        res = res + (uint32_t)((s[i] - 48) * pos);
-        pos = pos * 10;
-    }
-    return res;
-}
-
 void add_station(rb_tree *t, uint32_t distance, int n_cars, uint32_t *parking)
 {
     rb_node *new_station = rb_insert(t, distance);
@@ -283,7 +197,100 @@ void plan(rb_tree *t, heap *h, uint32_t start, uint32_t finish)
     free(visited);
 }
 
-int dijkstra(heap *h, heap_node *visited, bool LtoR,  uint32_t dest)
+//___________________________________________________________________________//
+void parse_input(rb_tree *t, heap *h, char *input)
+{
+    char token[30];
+    int in_len = strlen(input), in_read = 0;
+    uint32_t n1, n2, *cars;
+     
+    if(input[in_len - 1] == '\n'){
+        input[in_len -1] = '\0';
+        in_len--;
+    }
+    in_read = my_strtok(input, token, in_len, in_read);
+    if(strcmp(token, ns) == 0){
+        in_read = my_strtok(input, token, in_len, in_read);
+        n1 = my_atoi(token, strlen(token));
+        in_read = my_strtok(input, token, in_len, in_read);
+        n2 = my_atoi(token, strlen(token));
+        cars = calloc(n2, sizeof(uint32_t));
+        for(int i = 0; i< n2; i++){
+            in_read = my_strtok(input, token, in_len, in_read);
+            cars[i] = my_atoi(token, strlen(token));
+        }
+        if(PRINT_LOG){
+            fprintf(stderr, "adding station %d with %d cars : ", n1, n2);
+            for(int i=0; i<n2; i++)
+                fprintf(stderr, "%d, ", cars[i]);
+            fprintf(stderr, "\n");
+        }
+        add_station(t, n1, n2, cars);
+        free(cars);
+    }else if(strcmp(token, ds) == 0){
+        in_read = my_strtok(input, token, in_len, in_read);
+        n1 = my_atoi(token, strlen(token));
+        if(PRINT_LOG)
+            fprintf(stderr, "deleting station %d\n", n1);
+        remove_station(t, n1);
+    }else if(strcmp(token, nc) == 0){
+        in_read = my_strtok(input, token, in_len, in_read);
+        n1 = my_atoi(token, strlen(token));
+        in_read = my_strtok(input, token, in_len, in_read);
+        n2 = my_atoi(token, strlen(token));
+        if(PRINT_LOG)
+            fprintf(stderr, "adding car to %d with autonomy %d\n", n1, n2);
+        add_car(t, n1, n2);
+    }else if(strcmp(token, dc) == 0){
+        in_read = my_strtok(input, token, in_len, in_read);
+        n1 = my_atoi(token, strlen(token));
+        in_read = my_strtok(input, token, in_len, in_read);
+        n2 = my_atoi(token, strlen(token));
+        if(PRINT_LOG)
+            fprintf(stderr, "deleting car to %d with autonomy %d\n", n1, n2);
+        remove_car(t, n1, n2);
+    }else if(strcmp(token, pr) == 0){
+        in_read = my_strtok(input, token, in_len, in_read);
+        n1 = my_atoi(token, strlen(token));
+        in_read = my_strtok(input, token, in_len, in_read);
+        n2 = my_atoi(token, strlen(token));
+        if(PRINT_LOG)
+            fprintf(stderr, "planning route from %d to %d\n", n1, n2);
+        plan(t, h, n1, n2);
+    }
+}
+
+int my_strtok(char *input, char *token, int in_len, int start_point)
+{
+    if(start_point >= in_len){
+        fprintf(stderr, "[ERROR] my_strtok : noting to read\n");
+        return -1;
+    }
+    char c = input[start_point];
+    int tok_i = 0, read_chr = start_point;
+    do{
+        c = input[read_chr];
+        if(chr_cmp(c)){
+            token[tok_i] = c;
+            tok_i++;
+        }
+        read_chr++;
+    }while(chr_cmp(c));
+    token[tok_i] = '\0';
+    return read_chr;
+}
+
+uint32_t my_atoi(char *s, int s_len)
+{
+    uint32_t res = 0, pos=1;
+    for(int i=s_len-1; i>=0; i--){
+        res = res + (uint32_t)((s[i] - 48) * pos);
+        pos = pos * 10;
+    }
+    return res;
+}
+
+int dijkstra(heap *h, heap_node *visited, bool LtoR, uint32_t dest)
 {
     uint32_t ndis, reach;
     heap_node *u, *v;
@@ -303,8 +310,7 @@ int dijkstra(heap *h, heap_node *visited, bool LtoR,  uint32_t dest)
                 reach = u->key - u->max_autonomy;
         }
         for(int i = 0 ; i < h->heap_size ; i++){
-            if( (LtoR && h->min_h[i].key <= reach) ||
-                (!LtoR && h->min_h[i].key >= reach)){
+            if(is_adjacent(LtoR, h->min_h[i].key, reach)){
                 v = h->min_h + i;
                 if(u->es_dist != INF)
                     ndis = u->es_dist +1;
@@ -353,7 +359,7 @@ void print_route_rec(heap_node *curr, heap_node *src, char *out)
     strcat(out, b);
 }
 
-//___________________________________________________
+//___________________________________________________________________________//
 void h_init(heap *x, int lenght)
 {
     x->heap_lenght = lenght;
@@ -406,14 +412,13 @@ void h_fill(heap *h, rb_tree *t, uint32_t start, uint32_t finish)
         s = rb_successor(t, s);
         i++;
         if(i > h->heap_lenght)
-            fprintf(stderr, "ERROR h_fill: heap too small\n");
+            fprintf(stderr, "[ERROR] h_fill : heap too small\n");
     }
     h->heap_size = i;
 }
 
 bool h_isALessThanB(heap *h, int a, int b)
 {
-    assert(a != b);
     if(h->min_h[a].es_dist < h->min_h[b].es_dist)
         return true;
     else if(h->min_h[a].es_dist > h->min_h[b].es_dist)
@@ -457,7 +462,7 @@ void h_min_heapify(heap *h, int n)
 heap_node h_exctract_min(heap *h)
 {
     if(h->heap_size == 0){
-        fprintf(stderr, "ERROR h_extract_min : nothing to extract\n");
+        fprintf(stderr, "[ERROR] h_extract_min : nothing to extract\n");
         return (heap_node){0,INF,0,NULL};
     }
         
@@ -472,7 +477,7 @@ heap_node h_exctract_min(heap *h)
 void h_decrement_prio(heap *h, int i, uint32_t prio)
 {
     if(prio > h->min_h[i].es_dist){
-        fprintf(stderr, "Error : h_decrement_prio, new key not valid");
+        fprintf(stderr, "[ERROR] h_decrement_prio : new key not valid");
         return;
     }
     h->min_h[i].es_dist = prio;
@@ -482,28 +487,7 @@ void h_decrement_prio(heap *h, int i, uint32_t prio)
     }
 }
 
-void h_print(heap *h)
-{
-    fprintf(stderr, "lenght: %u size: %3u\n", h->heap_lenght, h->heap_size);
-    for(int i=0; i<h->heap_size; i++)
-        fprintf(stderr, "%10u | %3u | %3u\n", h->min_h[i].es_dist, h->min_h[i].key, h->min_h[i].max_autonomy);
-}
-
-void h_print_visited(heap_node *v, int len)
-{
-    fprintf(stderr, " key | pre | dist\n-----|-----|-----\n");
-    fprintf(stderr, "%4u | SRC | %u\n", v[0].key, v[0].es_dist);
-    for(int i=1; i<len; i++){
-        fprintf(stderr, "%4u |", v[i].key);
-        if(v[i].prev == NULL)
-            fprintf(stderr, " NULL|");
-        else fprintf(stderr, "%4u |", v[i].prev->key);
-        fprintf(stderr, " %u\n", v[i].es_dist);
-    }
-        
-}
-
-//___________________________________________________
+//___________________________________________________________________________//
 car *parking_new_node(uint32_t aut)
 {
     car *new_car = calloc(1, sizeof(car));
@@ -597,7 +581,7 @@ bool parking_delete(rb_node *s, uint32_t aut)
     }
 }
 
-//___________________________________________________
+//___________________________________________________________________________//
 rb_node *rb_new_node(rb_tree *t, rb_color c, uint32_t key)
 {
     rb_node *new = calloc(1, sizeof(rb_node));
@@ -623,7 +607,6 @@ void rb_init(rb_tree *t)
 {
     rb_node *nil = calloc(1, sizeof(rb_node));
     nil->c = RB_BLACK;
-    //il valore distance=0 potrebbe dare problemi
     t->nil = nil;
     t->root = t->nil;
 }
@@ -635,7 +618,7 @@ void rb_delete_all(rb_tree *t, rb_node *n)
 
     rb_delete_all(t, n->left);
     rb_delete_all(t, n->right);
-    rb_delete_node(n);    
+    rb_delete_node(n);
 }
 
 void rb_deinit(rb_tree *t)
@@ -904,16 +887,17 @@ rb_node *rb_successor(rb_tree *t, rb_node *x)
     return y;
 }
 
+//___________________________________________________________________________//
 void rb_print(rb_tree *t, rb_node *n)
 {
     if(n == t->nil)
         return;
     else{
         rb_print(t, n->left);
-        fprintf(stderr, "%3u [%3u] | ", n->distance, n->max_autonomy);
+        fprintf(stderr, "%10u [%10u] | ", n->distance, n->max_autonomy);
         car *c = n->parking;
         while(c != NULL){
-            fprintf(stderr, "%3u ", c->autonomy);
+            fprintf(stderr, "%u ", c->autonomy);
             c = c->next;
         }
         fprintf(stderr, "\n");
@@ -921,3 +905,23 @@ void rb_print(rb_tree *t, rb_node *n)
     }
 }
 
+void h_print(heap *h)
+{
+    fprintf(stderr, "lenght: %u size: %3u\n", h->heap_lenght, h->heap_size);
+    for(int i=0; i<h->heap_size; i++)
+        fprintf(stderr, "%10u | %3u | %3u\n", h->min_h[i].es_dist, h->min_h[i].key, h->min_h[i].max_autonomy);
+}
+
+void h_print_visited(heap_node *v, int len)
+{
+    fprintf(stderr, " key | pre | dist\n-----|-----|-----\n");
+    fprintf(stderr, "%4u | SRC | %u\n", v[0].key, v[0].es_dist);
+    for(int i=1; i<len; i++){
+        fprintf(stderr, "%4u |", v[i].key);
+        if(v[i].prev == NULL)
+            fprintf(stderr, " NULL|");
+        else fprintf(stderr, "%4u |", v[i].prev->key);
+        fprintf(stderr, " %u\n", v[i].es_dist);
+    }
+        
+}
