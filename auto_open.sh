@@ -16,6 +16,9 @@ then
         diff "./my_out.txt" ./$OUT
         #read -n1
     done
+    echo "Open_gen"
+    ./main <Test/Extra_Test/open_extra_gen.txt >"my_out.txt"
+    diff "./my_out.txt" ./Test/Extra_Test/open_extra_gen.output.txt
 else
     IN="${var}$1.txt"
     OUT="${var}$1.output.txt"

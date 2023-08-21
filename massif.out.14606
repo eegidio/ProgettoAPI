@@ -1,0 +1,757 @@
+desc: (none)
+cmd: ./main
+time_unit: i
+#-----------
+snapshot=0
+#-----------
+time=0
+mem_heap_B=0
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=1
+#-----------
+time=46383901
+mem_heap_B=2964056
+mem_heap_extra_B=2368
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=2
+#-----------
+time=108881893
+mem_heap_B=3823916
+mem_heap_extra_B=5964
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=3
+#-----------
+time=190310486
+mem_heap_B=4962496
+mem_heap_extra_B=10528
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=4
+#-----------
+time=291003596
+mem_heap_B=6290536
+mem_heap_extra_B=15936
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=5
+#-----------
+time=358210945
+mem_heap_B=7093876
+mem_heap_extra_B=19204
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=6
+#-----------
+time=419675135
+mem_heap_B=7825620
+mem_heap_extra_B=22132
+mem_stacks_B=0
+heap_tree=detailed
+n4: 7825620 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n1: 5332992 0x10A113: p_expand (main.c:551)
+  n1: 5332992 0x10A113: parking_insert (main.c:505)
+   n1: 5332992 0x10B07D: add_station (main.c:156)
+    n1: 5332992 0x10BB3E: parse_input (main.c:233)
+     n0: 5332992 0x10925D: main (main.c:137)
+ n1: 2400000 0x109240: h_init (main.c:372)
+  n0: 2400000 0x109240: main (main.c:134)
+ n1: 83328 0x10B006: rb_new_node (main.c:602)
+  n1: 83328 0x10B006: rb_insert (main.c:682)
+   n1: 83328 0x10B006: add_station (main.c:149)
+    n1: 83328 0x10BB3E: parse_input (main.c:233)
+     n0: 83328 0x10925D: main (main.c:137)
+ n0: 9300 in 5 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=7
+#-----------
+time=484794004
+mem_heap_B=8728832
+mem_heap_extra_B=25848
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=8
+#-----------
+time=524297955
+mem_heap_B=9284736
+mem_heap_extra_B=28112
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=9
+#-----------
+time=595916917
+mem_heap_B=10263796
+mem_heap_extra_B=32196
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=10
+#-----------
+time=697387037
+mem_heap_B=11607300
+mem_heap_extra_B=37652
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=11
+#-----------
+time=765642486
+mem_heap_B=12367296
+mem_heap_extra_B=40672
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=12
+#-----------
+time=815291400
+mem_heap_B=12779136
+mem_heap_extra_B=42416
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=13
+#-----------
+time=907443376
+mem_heap_B=14066412
+mem_heap_extra_B=47604
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=14
+#-----------
+time=964261769
+mem_heap_B=14789864
+mem_heap_extra_B=50488
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=15
+#-----------
+time=1020138237
+mem_heap_B=15567756
+mem_heap_extra_B=53660
+mem_stacks_B=0
+heap_tree=detailed
+n4: 15567756 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n1: 12955648 0x10A113: p_expand (main.c:551)
+  n1: 12955648 0x10A113: parking_insert (main.c:505)
+   n1: 12955648 0x10B07D: add_station (main.c:156)
+    n1: 12955648 0x10BB3E: parse_input (main.c:233)
+     n0: 12955648 0x10925D: main (main.c:137)
+ n1: 2400000 0x109240: h_init (main.c:372)
+  n0: 2400000 0x109240: main (main.c:134)
+ n1: 202432 0x10B006: rb_new_node (main.c:602)
+  n1: 202432 0x10B006: rb_insert (main.c:682)
+   n1: 202432 0x10B006: add_station (main.c:149)
+    n1: 202432 0x10BB3E: parse_input (main.c:233)
+     n0: 202432 0x10925D: main (main.c:137)
+ n0: 9676 in 5 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=16
+#-----------
+time=1100180453
+mem_heap_B=16582744
+mem_heap_extra_B=57808
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=17
+#-----------
+time=1195236197
+mem_heap_B=17922812
+mem_heap_extra_B=63356
+mem_stacks_B=0
+heap_tree=detailed
+n4: 17922812 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n1: 15273984 0x10A113: p_expand (main.c:551)
+  n1: 15273984 0x10A113: parking_insert (main.c:505)
+   n1: 15273984 0x10B07D: add_station (main.c:156)
+    n1: 15273984 0x10BB3E: parse_input (main.c:233)
+     n0: 15273984 0x10925D: main (main.c:137)
+ n1: 2400000 0x109240: h_init (main.c:372)
+  n0: 2400000 0x109240: main (main.c:134)
+ n1: 238656 0x10B006: rb_new_node (main.c:602)
+  n1: 238656 0x10B006: rb_insert (main.c:682)
+   n1: 238656 0x10B006: add_station (main.c:149)
+    n1: 238656 0x10BB3E: parse_input (main.c:233)
+     n0: 238656 0x10925D: main (main.c:137)
+ n0: 10172 in 5 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=18
+#-----------
+time=1278744455
+mem_heap_B=18695792
+mem_heap_extra_B=66488
+mem_stacks_B=0
+heap_tree=detailed
+n4: 18695792 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n1: 16035840 0x10A113: p_expand (main.c:551)
+  n1: 16035840 0x10A113: parking_insert (main.c:505)
+   n1: 16035840 0x10B07D: add_station (main.c:156)
+    n1: 16035840 0x10BB3E: parse_input (main.c:233)
+     n0: 16035840 0x10925D: main (main.c:137)
+ n1: 2400000 0x109240: h_init (main.c:372)
+  n0: 2400000 0x109240: main (main.c:134)
+ n1: 250560 0x10B006: rb_new_node (main.c:602)
+  n1: 250560 0x10B006: rb_insert (main.c:682)
+   n1: 250560 0x10B006: add_station (main.c:149)
+    n1: 250560 0x10BB3E: parse_input (main.c:233)
+     n0: 250560 0x10925D: main (main.c:137)
+ n0: 9392 in 5 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=19
+#-----------
+time=1346342385
+mem_heap_B=19656608
+mem_heap_extra_B=70472
+mem_stacks_B=0
+heap_tree=detailed
+n4: 19656608 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n1: 16982016 0x10A113: p_expand (main.c:551)
+  n1: 16982016 0x10A113: parking_insert (main.c:505)
+   n1: 16982016 0x10B07D: add_station (main.c:156)
+    n1: 16982016 0x10BB3E: parse_input (main.c:233)
+     n0: 16982016 0x10925D: main (main.c:137)
+ n1: 2400000 0x109240: h_init (main.c:372)
+  n0: 2400000 0x109240: main (main.c:134)
+ n1: 265344 0x10B006: rb_new_node (main.c:602)
+  n1: 265344 0x10B006: rb_insert (main.c:682)
+   n1: 265344 0x10B006: add_station (main.c:149)
+    n1: 265344 0x10BB3E: parse_input (main.c:233)
+     n0: 265344 0x10925D: main (main.c:137)
+ n0: 9248 in 5 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=20
+#-----------
+time=1421633820
+mem_heap_B=19747136
+mem_heap_extra_B=70848
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=21
+#-----------
+time=1511207029
+mem_heap_B=20671824
+mem_heap_extra_B=74584
+mem_stacks_B=0
+heap_tree=detailed
+n4: 20671824 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n1: 17981440 0x10A113: p_expand (main.c:551)
+  n1: 17981440 0x10A113: parking_insert (main.c:505)
+   n1: 17981440 0x10B07D: add_station (main.c:156)
+    n1: 17981440 0x10BB3E: parse_input (main.c:233)
+     n0: 17981440 0x10925D: main (main.c:137)
+ n1: 2400000 0x109240: h_init (main.c:372)
+  n0: 2400000 0x109240: main (main.c:134)
+ n1: 280960 0x10B006: rb_new_node (main.c:602)
+  n1: 280960 0x10B006: rb_insert (main.c:682)
+   n1: 280960 0x10B006: add_station (main.c:149)
+    n1: 280960 0x10BB3E: parse_input (main.c:233)
+     n0: 280960 0x10925D: main (main.c:137)
+ n0: 9424 in 5 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=22
+#-----------
+time=1588386984
+mem_heap_B=21736888
+mem_heap_extra_B=78912
+mem_stacks_B=0
+heap_tree=detailed
+n4: 21736888 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n1: 19030016 0x10A113: p_expand (main.c:551)
+  n1: 19030016 0x10A113: parking_insert (main.c:505)
+   n1: 19030016 0x10B07D: add_station (main.c:156)
+    n1: 19030016 0x10BB3E: parse_input (main.c:233)
+     n0: 19030016 0x10925D: main (main.c:137)
+ n1: 2400000 0x109240: h_init (main.c:372)
+  n0: 2400000 0x109240: main (main.c:134)
+ n1: 297344 0x10B006: rb_new_node (main.c:602)
+  n1: 297344 0x10B006: rb_insert (main.c:682)
+   n1: 297344 0x10B006: add_station (main.c:149)
+    n1: 297344 0x10BB3E: parse_input (main.c:233)
+     n0: 297344 0x10925D: main (main.c:137)
+ n0: 9528 in 5 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=23
+#-----------
+time=1680353589
+mem_heap_B=21957000
+mem_heap_extra_B=79504
+mem_stacks_B=0
+heap_tree=detailed
+n4: 21957000 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n1: 19169280 0x10A113: p_expand (main.c:551)
+  n1: 19169280 0x10A113: parking_insert (main.c:505)
+   n1: 19169280 0x10B07D: add_station (main.c:156)
+    n1: 19169280 0x10BB3E: parse_input (main.c:233)
+     n0: 19169280 0x10925D: main (main.c:137)
+ n1: 2400000 0x109240: h_init (main.c:372)
+  n0: 2400000 0x109240: main (main.c:134)
+ n1: 299520 0x10B006: rb_new_node (main.c:602)
+  n1: 299520 0x10B006: rb_insert (main.c:682)
+   n1: 299520 0x10B006: add_station (main.c:149)
+    n1: 299520 0x10BB3E: parse_input (main.c:233)
+     n0: 299520 0x10925D: main (main.c:137)
+ n0: 88200 in 5 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=24
+#-----------
+time=1699939725
+mem_heap_B=22177796
+mem_heap_extra_B=80772
+mem_stacks_B=0
+heap_tree=detailed
+n4: 22177796 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n1: 19464192 0x10A113: p_expand (main.c:551)
+  n1: 19464192 0x10A113: parking_insert (main.c:505)
+   n1: 19464192 0x10B07D: add_station (main.c:156)
+    n1: 19464192 0x10BB3E: parse_input (main.c:233)
+     n0: 19464192 0x10925D: main (main.c:137)
+ n1: 2400000 0x109240: h_init (main.c:372)
+  n0: 2400000 0x109240: main (main.c:134)
+ n1: 304128 0x10B006: rb_new_node (main.c:602)
+  n1: 304128 0x10B006: rb_insert (main.c:682)
+   n1: 304128 0x10B006: add_station (main.c:149)
+    n1: 304128 0x10BB3E: parse_input (main.c:233)
+     n0: 304128 0x10925D: main (main.c:137)
+ n0: 9476 in 5 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=25
+#-----------
+time=1801122938
+mem_heap_B=22263936
+mem_heap_extra_B=81088
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=26
+#-----------
+time=1859214937
+mem_heap_B=23030648
+mem_heap_extra_B=84240
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=27
+#-----------
+time=1932552500
+mem_heap_B=24027776
+mem_heap_extra_B=88272
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=28
+#-----------
+time=1985336000
+mem_heap_B=24769584
+mem_heap_extra_B=91432
+mem_stacks_B=0
+heap_tree=detailed
+n4: 24769584 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n1: 22016000 0x10A113: p_expand (main.c:551)
+  n1: 22016000 0x10A113: parking_insert (main.c:505)
+   n1: 22016000 0x10B07D: add_station (main.c:156)
+    n1: 22016000 0x10BB3E: parse_input (main.c:233)
+     n0: 22016000 0x10925D: main (main.c:137)
+ n1: 2400000 0x109240: h_init (main.c:372)
+  n0: 2400000 0x109240: main (main.c:134)
+ n1: 344000 0x10B006: rb_new_node (main.c:602)
+  n1: 344000 0x10B006: rb_insert (main.c:682)
+   n1: 344000 0x10B006: add_station (main.c:149)
+    n1: 344000 0x10BB3E: parse_input (main.c:233)
+     n0: 344000 0x10925D: main (main.c:137)
+ n0: 9584 in 5 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=29
+#-----------
+time=2127508455
+mem_heap_B=25023912
+mem_heap_extra_B=92080
+mem_stacks_B=0
+heap_tree=detailed
+n4: 25023912 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n1: 22167552 0x10A113: p_expand (main.c:551)
+  n1: 22167552 0x10A113: parking_insert (main.c:505)
+   n1: 22167552 0x10B07D: add_station (main.c:156)
+    n1: 22167552 0x10BB3E: parse_input (main.c:233)
+     n0: 22167552 0x10925D: main (main.c:137)
+ n1: 2400000 0x109240: h_init (main.c:372)
+  n0: 2400000 0x109240: main (main.c:134)
+ n1: 346368 0x10B006: rb_new_node (main.c:602)
+  n1: 346368 0x10B006: rb_insert (main.c:682)
+   n1: 346368 0x10B006: add_station (main.c:149)
+    n1: 346368 0x10BB3E: parse_input (main.c:233)
+     n0: 346368 0x10925D: main (main.c:137)
+ n0: 109992 in 5 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=30
+#-----------
+time=2174903405
+mem_heap_B=25513964
+mem_heap_extra_B=94476
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=31
+#-----------
+time=2233764193
+mem_heap_B=26312920
+mem_heap_extra_B=97856
+mem_stacks_B=0
+heap_tree=detailed
+n4: 26312920 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n1: 23535616 0x10A113: p_expand (main.c:551)
+  n1: 23535616 0x10A113: parking_insert (main.c:505)
+   n1: 23535616 0x10B07D: add_station (main.c:156)
+    n1: 23535616 0x10BB3E: parse_input (main.c:233)
+     n0: 23535616 0x10925D: main (main.c:137)
+ n1: 2400000 0x109240: h_init (main.c:372)
+  n0: 2400000 0x109240: main (main.c:134)
+ n1: 367744 0x10B006: rb_new_node (main.c:602)
+  n1: 367744 0x10B006: rb_insert (main.c:682)
+   n1: 367744 0x10B006: add_station (main.c:149)
+    n1: 367744 0x10BB3E: parse_input (main.c:233)
+     n0: 367744 0x10925D: main (main.c:137)
+ n0: 9560 in 5 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=32
+#-----------
+time=2334593217
+mem_heap_B=27665400
+mem_heap_extra_B=103424
+mem_stacks_B=0
+heap_tree=detailed
+n4: 27665400 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n1: 24866816 0x10A113: p_expand (main.c:551)
+  n1: 24866816 0x10A113: parking_insert (main.c:505)
+   n1: 24866816 0x10B07D: add_station (main.c:156)
+    n1: 24866816 0x10BB3E: parse_input (main.c:233)
+     n0: 24866816 0x10925D: main (main.c:137)
+ n1: 2400000 0x109240: h_init (main.c:372)
+  n0: 2400000 0x109240: main (main.c:134)
+ n1: 388544 0x10B006: rb_new_node (main.c:602)
+  n1: 388544 0x10B006: rb_insert (main.c:682)
+   n1: 388544 0x10B006: add_station (main.c:149)
+    n1: 388544 0x10BB3E: parse_input (main.c:233)
+     n0: 388544 0x10925D: main (main.c:137)
+ n0: 10040 in 5 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=33
+#-----------
+time=2428162881
+mem_heap_B=27809216
+mem_heap_extra_B=103984
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=34
+#-----------
+time=2526560556
+mem_heap_B=29087888
+mem_heap_extra_B=109368
+mem_stacks_B=0
+heap_tree=detailed
+n4: 29087888 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n1: 26267648 0x10A113: p_expand (main.c:551)
+  n1: 26267648 0x10A113: parking_insert (main.c:505)
+   n1: 26267648 0x10B07D: add_station (main.c:156)
+    n1: 26267648 0x10BB3E: parse_input (main.c:233)
+     n0: 26267648 0x10925D: main (main.c:137)
+ n1: 2400000 0x109240: h_init (main.c:372)
+  n0: 2400000 0x109240: main (main.c:134)
+ n1: 410432 0x10B006: rb_new_node (main.c:602)
+  n1: 410432 0x10B006: rb_insert (main.c:682)
+   n1: 410432 0x10B006: add_station (main.c:149)
+    n1: 410432 0x10BB3E: parse_input (main.c:233)
+     n0: 410432 0x10925D: main (main.c:137)
+ n0: 9808 in 5 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=35
+#-----------
+time=2569856492
+mem_heap_B=29678328
+mem_heap_extra_B=111776
+mem_stacks_B=0
+heap_tree=detailed
+n4: 29678328 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n1: 26849280 0x10A113: p_expand (main.c:551)
+  n1: 26849280 0x10A113: parking_insert (main.c:505)
+   n1: 26849280 0x10B07D: add_station (main.c:156)
+    n1: 26849280 0x10BB3E: parse_input (main.c:233)
+     n0: 26849280 0x10925D: main (main.c:137)
+ n1: 2400000 0x109240: h_init (main.c:372)
+  n0: 2400000 0x109240: main (main.c:134)
+ n1: 419520 0x10B006: rb_new_node (main.c:602)
+  n1: 419520 0x10B006: rb_insert (main.c:682)
+   n1: 419520 0x10B006: add_station (main.c:149)
+    n1: 419520 0x10BB3E: parse_input (main.c:233)
+     n0: 419520 0x10925D: main (main.c:137)
+ n0: 9528 in 5 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=36
+#-----------
+time=2635296400
+mem_heap_B=30538176
+mem_heap_extra_B=115424
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=37
+#-----------
+time=2712109980
+mem_heap_B=31516936
+mem_heap_extra_B=119456
+mem_stacks_B=0
+heap_tree=detailed
+n4: 31516936 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n1: 28659712 0x10A113: p_expand (main.c:551)
+  n1: 28659712 0x10A113: parking_insert (main.c:505)
+   n1: 28659712 0x10B07D: add_station (main.c:156)
+    n1: 28659712 0x10BB3E: parse_input (main.c:233)
+     n0: 28659712 0x10925D: main (main.c:137)
+ n1: 2400000 0x109240: h_init (main.c:372)
+  n0: 2400000 0x109240: main (main.c:134)
+ n1: 447808 0x10B006: rb_new_node (main.c:602)
+  n1: 447808 0x10B006: rb_insert (main.c:682)
+   n1: 447808 0x10B006: add_station (main.c:149)
+    n1: 447808 0x10BB3E: parse_input (main.c:233)
+     n0: 447808 0x10925D: main (main.c:137)
+ n0: 9416 in 5 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=38
+#-----------
+time=2759549505
+mem_heap_B=32153400
+mem_heap_extra_B=122144
+mem_stacks_B=0
+heap_tree=detailed
+n4: 32153400 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n1: 29286400 0x10A113: p_expand (main.c:551)
+  n1: 29286400 0x10A113: parking_insert (main.c:505)
+   n1: 29286400 0x10B07D: add_station (main.c:156)
+    n1: 29286400 0x10BB3E: parse_input (main.c:233)
+     n0: 29286400 0x10925D: main (main.c:137)
+ n1: 2400000 0x109240: h_init (main.c:372)
+  n0: 2400000 0x109240: main (main.c:134)
+ n1: 457600 0x10B006: rb_new_node (main.c:602)
+  n1: 457600 0x10B006: rb_insert (main.c:682)
+   n1: 457600 0x10B006: add_station (main.c:149)
+    n1: 457600 0x10BB3E: parse_input (main.c:233)
+     n0: 457600 0x10925D: main (main.c:137)
+ n0: 9400 in 5 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=39
+#-----------
+time=2826639223
+mem_heap_B=33077492
+mem_heap_extra_B=125988
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=40
+#-----------
+time=2904324001
+mem_heap_B=34146208
+mem_heap_extra_B=130360
+mem_stacks_B=0
+heap_tree=detailed
+n4: 34146208 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n1: 31248384 0x10A113: p_expand (main.c:551)
+  n1: 31248384 0x10A113: parking_insert (main.c:505)
+   n1: 31248384 0x10B07D: add_station (main.c:156)
+    n1: 31248384 0x10BB3E: parse_input (main.c:233)
+     n0: 31248384 0x10925D: main (main.c:137)
+ n1: 2400000 0x109240: h_init (main.c:372)
+  n0: 2400000 0x109240: main (main.c:134)
+ n1: 488256 0x10B006: rb_new_node (main.c:602)
+  n1: 488256 0x10B006: rb_insert (main.c:682)
+   n1: 488256 0x10B006: add_station (main.c:149)
+    n1: 488256 0x10BB3E: parse_input (main.c:233)
+     n0: 488256 0x10925D: main (main.c:137)
+ n0: 9568 in 5 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=41
+#-----------
+time=2975902229
+mem_heap_B=35186052
+mem_heap_extra_B=134660
+mem_stacks_B=0
+heap_tree=detailed
+n4: 35186052 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n1: 32272384 0x10A113: p_expand (main.c:551)
+  n1: 32272384 0x10A113: parking_insert (main.c:505)
+   n1: 32272384 0x10B07D: add_station (main.c:156)
+    n1: 32272384 0x10BB3E: parse_input (main.c:233)
+     n0: 32272384 0x10925D: main (main.c:137)
+ n1: 2400000 0x109240: h_init (main.c:372)
+  n0: 2400000 0x109240: main (main.c:134)
+ n1: 504256 0x10B006: rb_new_node (main.c:602)
+  n1: 504256 0x10B006: rb_insert (main.c:682)
+   n1: 504256 0x10B006: add_station (main.c:149)
+    n1: 504256 0x10BB3E: parse_input (main.c:233)
+     n0: 504256 0x10925D: main (main.c:137)
+ n0: 9412 in 5 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=42
+#-----------
+time=3290457639
+mem_heap_B=35564024
+mem_heap_extra_B=135552
+mem_stacks_B=0
+heap_tree=detailed
+n4: 35564024 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n1: 32493568 0x10A113: p_expand (main.c:551)
+  n1: 32493568 0x10A113: parking_insert (main.c:505)
+   n1: 32493568 0x10B07D: add_station (main.c:156)
+    n1: 32493568 0x10BB3E: parse_input (main.c:233)
+     n0: 32493568 0x10925D: main (main.c:137)
+ n1: 2400000 0x109240: h_init (main.c:372)
+  n0: 2400000 0x109240: main (main.c:134)
+ n1: 507712 0x10B006: rb_new_node (main.c:602)
+  n1: 507712 0x10B006: rb_insert (main.c:682)
+   n1: 507712 0x10B006: add_station (main.c:149)
+    n1: 507712 0x10BB3E: parse_input (main.c:233)
+     n0: 507712 0x10925D: main (main.c:137)
+ n0: 162744 in 5 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=43
+#-----------
+time=3386061570
+mem_heap_B=36210156
+mem_heap_extra_B=138852
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=44
+#-----------
+time=3442832850
+mem_heap_B=36933492
+mem_heap_extra_B=141732
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=45
+#-----------
+time=3527465600
+mem_heap_B=38030336
+mem_heap_extra_B=146192
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=46
+#-----------
+time=3591648846
+mem_heap_B=38913484
+mem_heap_extra_B=149964
+mem_stacks_B=0
+heap_tree=detailed
+n4: 38913484 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n1: 35942400 0x10A113: p_expand (main.c:551)
+  n1: 35942400 0x10A113: parking_insert (main.c:505)
+   n1: 35942400 0x10B07D: add_station (main.c:156)
+    n1: 35942400 0x10BB3E: parse_input (main.c:233)
+     n0: 35942400 0x10925D: main (main.c:137)
+ n1: 2400000 0x109240: h_init (main.c:372)
+  n0: 2400000 0x109240: main (main.c:134)
+ n1: 561600 0x10B006: rb_new_node (main.c:602)
+  n1: 561600 0x10B006: rb_insert (main.c:682)
+   n1: 561600 0x10B006: add_station (main.c:149)
+    n1: 561600 0x10BB3E: parse_input (main.c:233)
+     n0: 561600 0x10925D: main (main.c:137)
+ n0: 9484 in 5 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=47
+#-----------
+time=3783185143
+mem_heap_B=38987136
+mem_heap_extra_B=150256
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=48
+#-----------
+time=3882518082
+mem_heap_B=40373836
+mem_heap_extra_B=155924
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=49
+#-----------
+time=3949442469
+mem_heap_B=41322044
+mem_heap_extra_B=159836
+mem_stacks_B=0
+heap_tree=detailed
+n4: 41322044 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n1: 38313984 0x10A113: p_expand (main.c:551)
+  n1: 38313984 0x10A113: parking_insert (main.c:505)
+   n1: 38313984 0x10B07D: add_station (main.c:156)
+    n1: 38313984 0x10BB3E: parse_input (main.c:233)
+     n0: 38313984 0x10925D: main (main.c:137)
+ n1: 2400000 0x109240: h_init (main.c:372)
+  n0: 2400000 0x109240: main (main.c:134)
+ n1: 598656 0x10B006: rb_new_node (main.c:602)
+  n1: 598656 0x10B006: rb_insert (main.c:682)
+   n1: 598656 0x10B006: add_station (main.c:149)
+    n1: 598656 0x10BB3E: parse_input (main.c:233)
+     n0: 598656 0x10925D: main (main.c:137)
+ n0: 9404 in 5 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=50
+#-----------
+time=3969037912
+mem_heap_B=41603776
+mem_heap_extra_B=160992
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=51
+#-----------
+time=3978027749
+mem_heap_B=41738204
+mem_heap_extra_B=161532
+mem_stacks_B=0
+heap_tree=peak
+n4: 41738204 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n1: 38723584 0x10A113: p_expand (main.c:551)
+  n1: 38723584 0x10A113: parking_insert (main.c:505)
+   n1: 38723584 0x10B07D: add_station (main.c:156)
+    n1: 38723584 0x10BB3E: parse_input (main.c:233)
+     n0: 38723584 0x10925D: main (main.c:137)
+ n1: 2400000 0x109240: h_init (main.c:372)
+  n0: 2400000 0x109240: main (main.c:134)
+ n1: 605056 0x10B006: rb_new_node (main.c:602)
+  n1: 605056 0x10B006: rb_insert (main.c:682)
+   n1: 605056 0x10B006: add_station (main.c:149)
+    n1: 605056 0x10BB3E: parse_input (main.c:233)
+     n0: 605056 0x10925D: main (main.c:137)
+ n0: 9564 in 5 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=52
+#-----------
+time=4074935875
+mem_heap_B=41799296
+mem_heap_extra_B=161760
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=53
+#-----------
+time=4313693507
+mem_heap_B=41865856
+mem_heap_extra_B=162032
+mem_stacks_B=0
+heap_tree=empty
